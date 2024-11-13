@@ -29,7 +29,7 @@ with open("../README.md", "r", encoding="utf-8") as fh:
 # ninja build does not work unless include_dirs are abs path
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
-PACKAGE_NAME = "flashattn-hopper"
+PACKAGE_NAME = "flashattn_2d-dev"
 
 BASE_WHEEL_URL = "https://github.com/Dao-AILab/flash-attention/releases/download/{tag_name}/{wheel_name}"
 
@@ -78,7 +78,7 @@ def check_if_cuda_home_none(global_option: str) -> None:
 
 
 def append_nvcc_threads(nvcc_extra_args):
-    return nvcc_extra_args + ["--threads", "4"]
+    return nvcc_extra_args + ["--threads", "48"]
 
 
 cmdclass = {}

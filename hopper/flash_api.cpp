@@ -1586,6 +1586,8 @@ mha_fwd_kvcache(at::Tensor &q,                 // batch_size x seqlen_q x num_he
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.doc() = "FlashAttention";
     m.def("fwd", &mha_fwd, "Forward pass");
+    m.def("fwd_2d", &mha_fwd_2d, "Forward pass for 2D attention");
+    m.def("bwd", &mha_bwd, "Backward pass");
     m.def("bwd", &mha_bwd, "Backward pass");
     m.def("varlen_fwd", &mha_varlen_fwd, "Forward pass (variable length)");
     m.def("varlen_bwd", &mha_varlen_bwd, "Varlen backward pass");

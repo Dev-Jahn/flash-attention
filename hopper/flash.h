@@ -146,6 +146,11 @@ struct Flash_fwd_params : public Qkv_params {
     float * __restrict__ descale_v_ptr;
 };
 
+struct Flash_fwd_2d_params : public Flash_fwd_params {
+    int height;
+    int width;
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct Flash_bwd_params : public Flash_fwd_params {
