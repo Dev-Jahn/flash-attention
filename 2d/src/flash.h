@@ -39,7 +39,6 @@ struct Qkv_params {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct Flash_fwd_params : public Qkv_params {
-
     // The O matrix (output).
     void *__restrict__ o_ptr;
     void *__restrict__ oaccum_ptr;
@@ -120,9 +119,10 @@ struct Flash_fwd_params : public Qkv_params {
 
     // Local window size
     int window_size_left, window_size_right;
-    int window_size_top, window_size_bottom; // For 2D attention
-
-    int height, width; // For 2D attention
+#ifdef FLASHATTENTION_ENABLE_2D
+    int window_size_top, window_size_bottom;
+    int height, width;
+#endif
 
     // Pointer to the RNG seed (idx 0) and offset (idx 1).
     uint64_t *rng_state;
@@ -131,7 +131,6 @@ struct Flash_fwd_params : public Qkv_params {
     bool is_e4m3;
     bool is_causal;
     bool is_local;
-    bool is_2d;
     bool is_kv_cache;
     bool use_gqa_packing;
 
@@ -157,7 +156,6 @@ struct Flash_fwd_params : public Qkv_params {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct Flash_bwd_params : public Flash_fwd_params {
-
     // The dO and dQKV matrices.
     void *__restrict__ do_ptr;
     void *__restrict__ dq_ptr;

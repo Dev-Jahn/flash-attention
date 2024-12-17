@@ -1,0 +1,52 @@
+{
+    "configurations": [
+        {
+            "name": "CUDA General",
+            "includePath": [
+                "${workspaceFolder}/csrc/cutlass/include",
+                "/usr/local/cuda/include",
+                "/home/ubuntu/anaconda3/envs/flash-dev/include/python3.11",
+                "/home/ubuntu/anaconda3/envs/flash-dev/lib/python3.11/site-packages/torch/include",
+                "/home/ubuntu/anaconda3/envs/flash-dev/lib/python3.11/site-packages/torch/include/torch/csrc/api/include",
+            ],
+            "defines": [],
+            "compilerPath": "/usr/local/cuda/bin/nvcc",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            "name": "CUDA 2D",
+            "includePath": [
+                "${workspaceFolder}/csrc/cutlass/include",
+                "${workspaceFolder}/2d/src/**",
+                "/usr/local/cuda/include",
+                "/home/ubuntu/anaconda3/envs/flash-dev/include/python3.11",
+                "/home/ubuntu/anaconda3/envs/flash-dev/lib/python3.11/site-packages/torch/include",
+                "/home/ubuntu/anaconda3/envs/flash-dev/lib/python3.11/site-packages/torch/include/torch/csrc/api/include",
+            ],
+            "defines": [
+                "FLASHATTENTION_ENABLE_2D",
+                "FLASH_DEBUG"
+            ],
+            "compilerPath": "/usr/local/cuda/bin/nvcc",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        },
+        {
+            "name": "CUDA Hopper",
+            "includePath": [
+                "${workspaceFolder}/csrc/cutlass/include",
+                "${workspaceFolder}/hopper/**",
+                "/usr/local/cuda/include",
+                "/home/ubuntu/anaconda3/envs/flash-dev/include/python3.11",
+                "/home/ubuntu/anaconda3/envs/flash-dev/lib/python3.11/site-packages/torch/include",
+                "/home/ubuntu/anaconda3/envs/flash-dev/lib/python3.11/site-packages/torch/include/torch/csrc/api/include",
+            ],
+            "defines": [],
+            "compilerPath": "/usr/local/cuda/bin/nvcc",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

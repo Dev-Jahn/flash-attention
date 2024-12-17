@@ -1,0 +1,82 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Python File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python + C++",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "stopOnEntry": false,
+            "cwd": "${workspaceFolder}",
+            "env": {}
+        },
+        {
+            "name": "CPP-GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/home/ubuntu/anaconda3/envs/flash-dev/bin/python",
+            "args": [
+                "${file}"
+            ],
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+            // "miDebuggerPath": "/usr/local/cuda/bin/cuda-gdb",
+        },
+        {
+            "name": "CUDA-GDB: Launch",
+            "type": "cuda-gdb",
+            "request": "launch",
+            "program": "/home/ubuntu/anaconda3/envs/flash-dev/bin/python",
+            "args": [
+                "${file}"
+            ],
+            "breakOnLaunch": false,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "CUDA-GDB: Attach",
+            "type": "cuda-gdb",
+            "request": "attach",
+            "processId": "${command:cuda.pickProcess}"
+        },
+        {
+            "name": "Pytest: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "${file}",
+                "-v",
+                "-s"
+            ],
+            "cwd": "${workspaceFolder}/2d",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Nsight Compute",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/ubuntu/anaconda3/envs/flash-dev/bin/python",
+            "args": [
+                "${file}"
+            ],
+            "cwd": "${workspaceFolder}",
+        }
+    ]
+}

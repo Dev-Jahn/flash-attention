@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=64", "wheel", "ninja", "torch", "packaging"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flashattn_2d"
+version = "0.0.1"
+description = "Flash Attention 2D CUDA kernels for Hopper GPUs"
+requires-python = ">=3.8"
+dependencies = ["torch", "einops", "packaging", "ninja"]
+
+
+[tool.setuptools]
+packages = ["flashattn_2d"]

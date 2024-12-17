@@ -18,7 +18,16 @@ import urllib.error
 from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 
 import torch
-from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension, CUDA_HOME
+from torch.utils.cpp_extension import (
+    BuildExtension,
+    CppExtension,
+    CUDAExtension,
+    CUDA_HOME,
+)
+
+# if os.system("which ccache") == 0:
+# os.environ["CXX"] = "ccache"
+# os.environ["CUDA_NVCC_EXECUTABLE"] = "ccache"
 
 
 # with open("../README.md", "r", encoding="utf-8") as fh:
@@ -29,7 +38,7 @@ with open("../README.md", "r", encoding="utf-8") as fh:
 # ninja build does not work unless include_dirs are abs path
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
-PACKAGE_NAME = "flashattn_2d-dev"
+PACKAGE_NAME = "flashattn-hopper"
 
 BASE_WHEEL_URL = "https://github.com/Dao-AILab/flash-attention/releases/download/{tag_name}/{wheel_name}"
 
@@ -57,7 +66,9 @@ def get_platform():
 
 
 def get_cuda_bare_metal_version(cuda_dir):
-    raw_output = subprocess.check_output([cuda_dir + "/bin/nvcc", "-V"], universal_newlines=True)
+    raw_output = subprocess.check_output(
+        [cuda_dir + "/bin/nvcc", "-V"], universal_newlines=True
+    )
     output = raw_output.split()
     release_idx = output.index("release") + 1
     bare_metal_version = parse(output[release_idx].split(",")[0])
@@ -78,7 +89,7 @@ def check_if_cuda_home_none(global_option: str) -> None:
 
 
 def append_nvcc_threads(nvcc_extra_args):
-    return nvcc_extra_args + ["--threads", "48"]
+    return nvcc_extra_args + ["--threads", "4"]
 
 
 cmdclass = {}
@@ -174,7 +185,6 @@ if not SKIP_CUDA_BUILD:
     ]
     nvcc_flags = [
         "-O3",
-        # "-O0",
         "-std=c++17",
         "-U__CUDA_NO_HALF_OPERATORS__",
         "-U__CUDA_NO_HALF_CONVERSIONS__",
@@ -212,15 +222,13 @@ if not SKIP_CUDA_BUILD:
             name="flashattn_hopper_cuda",
             sources=sources,
             extra_compile_args={
-                "cxx": ["-O3", "-std=c++17"],
-                # "cxx": ["-O0", "-std=c++17"],
-                "nvcc": append_nvcc_threads(
-                    nvcc_flags + cc_flag
-                ),
+                # "cxx": ["-O3", "-std=c++17"],
+                "cxx": ["-g", "-O0", "-std=c++17"],
+                "nvcc": append_nvcc_threads(nvcc_flags + cc_flag),
             },
             include_dirs=include_dirs,
             # Without this we get and error about cuTensorMapEncodeTiled not defined
-            libraries=["cuda"]
+            libraries=["cuda"],
         )
     )
     # ext_modules.append(
@@ -259,7 +267,9 @@ def get_wheel_url():
     torch_version_raw = parse(torch.__version__)
     # For CUDA 11, we only compile for CUDA 11.8, and for CUDA 12 we only compile for CUDA 12.2
     # to save CI time. Minor versions should be compatible.
-    torch_cuda_version = parse("11.8") if torch_cuda_version.major == 11 else parse("12.2")
+    torch_cuda_version = (
+        parse("11.8") if torch_cuda_version.major == 11 else parse("12.2")
+    )
     python_version = f"cp{sys.version_info.major}{sys.version_info.minor}"
     platform_name = get_platform()
     package_version = get_package_version()
@@ -270,7 +280,9 @@ def get_wheel_url():
 
     # Determine wheel URL based on CUDA version, torch version, python version and OS
     wheel_filename = f"{PACKAGE_NAME}-{package_version}+cu{cuda_version}torch{torch_version}cxx11abi{cxx11_abi}-{python_version}-{python_version}-{platform_name}.whl"
-    wheel_url = BASE_WHEEL_URL.format(tag_name=f"v{package_version}", wheel_name=wheel_filename)
+    wheel_url = BASE_WHEEL_URL.format(
+        tag_name=f"v{package_version}", wheel_name=wheel_filename
+    )
     return wheel_url, wheel_filename
 
 
@@ -308,6 +320,7 @@ class CachedWheelsCommand(_bdist_wheel):
             # If the wheel could not be downloaded, build from source
             super().run()
 
+
 setup(
     name=PACKAGE_NAME,
     version=get_package_version(),
@@ -332,11 +345,13 @@ setup(
         "Operating System :: Unix",
     ],
     ext_modules=ext_modules,
-    cmdclass={"bdist_wheel": CachedWheelsCommand, "build_ext": BuildExtension}
-    if ext_modules
-    else {
-        "bdist_wheel": CachedWheelsCommand,
-    },
+    cmdclass=(
+        {"bdist_wheel": CachedWheelsCommand, "build_ext": BuildExtension}
+        if ext_modules
+        else {
+            "bdist_wheel": CachedWheelsCommand,
+        }
+    ),
     python_requires=">=3.8",
     install_requires=[
         "torch",
